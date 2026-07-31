@@ -1,0 +1,6 @@
+"dev": "ts-node-dev --respawn src/index.ts"
+dev — eta hocche nickname. Tumi terminal-e likhbe: npm run dev
+ts-node-dev — eta ekta tool jeta .ts file ke directly run korte pare (normally Node শুধু .js chinte pare, .ts na — eta first compile korte hoy, tarpor run). ts-node-dev shei compile + run duitai internally kore dey ekshathe, 
+tumi ke manually tsc chalate hoy na.
+--respawn — eta hocche auto-restart feature. Tumi jokhon code save korba (kono file edit korle), server nijer theke restart hobe. Eta na thakle, protibar change korle tomake manually server ta bondho kore abar chalate hoto.
+src/index.ts — kon file ta run korte hobe, sheta bole dicche.
