@@ -2,6 +2,9 @@
 import express, { Request, Response } from 'express';
 import taskRoutes from '../src/tasks/task.router';
 import cors from "cors";
+import swaggerUi from 'swagger-ui-express';
+import openapiSpec from '../src/openapi.json';
+
 
 const app = express()
 app.use(express.json())
@@ -22,4 +25,5 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 app.use('/tasks', taskRoutes );
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
 app.listen(3000, () => console.log('Server running on port 3000'));
