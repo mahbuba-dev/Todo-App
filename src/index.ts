@@ -1,16 +1,25 @@
 
 import express, { Request, Response } from 'express';
 import taskRoutes from '../src/tasks/task.router';
+import cors from "cors";
 
 const app = express()
 app.use(express.json())
+
+app.use(cors());
+
+
 
 app.get('/', (req: Request, res: Response) => {
   // your Stage 1 response here
 });
 
 app.get('/health', (req: Request, res: Response) => {
-  // your Stage 1 response here
+  res.status(200).json({
+    status: "ok",
+    message: "Server is healthy"
+  });
 });
+
 app.use('/tasks', taskRoutes );
 app.listen(3000, () => console.log('Server running on port 3000'));
