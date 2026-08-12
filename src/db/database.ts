@@ -9,3 +9,15 @@ db.exec(`
     done BOOLEAN NOT NULL DEFAULT 0
   )
 `);
+
+const row = db.prepare('SELECT COUNT(*) as count from tasks').get() as {count: number };
+
+
+if (row.count === 0) {
+  const insert = db.prepare('INSERT INTO tasks (title, done) VALUES (?, ?)');
+  insert.run('Buy milk', 0);
+  insert.run('Finish assignment', 0);
+  insert.run('Read chapter 3', 1);
+}
+
+export default db

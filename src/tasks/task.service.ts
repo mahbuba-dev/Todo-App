@@ -1,44 +1,55 @@
-import { Task } from "../types/task";
+import db from '../db/database';
+import { Task } from '../types/task';
 
+interface TaskRow {
+  id: number;
+  title: string;
+  done: number; // SQLite stores booleans as 0/1
+}
 
-let tasks: Task[] = [
-  { id: 1, title: 'Buy milk', done: false },
-  { id: 2, title: 'Finish assignment', done: false },
-  { id: 3, title: 'Read chapter 3', done: true },
-];
+const toTask = (row: TaskRow): Task => ({
+  id: row.id,
+  title: row.title,
+  done: Boolean(row.done),
+});
 
 export const getAllTasks = (): Task[] => {
-  return tasks;
+  const rows = db.prepare('SELECT * FROM tasks').all() as TaskRow[];
+  return rows.map(toTask);
 };
 
 export const getTaskById = (id: number): Task | undefined => {
-  return tasks.find((t) => t.id === id);
+  const row = db.prepare('SELECT * FROM tasks WHERE id = ?').get(id) as TaskRow | undefined;
+  return row ? toTask(row) : undefined;
 };
 
 export const createTask = (title: string): Task => {
-  const nextId = tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1;
-  const newTask: Task = { id: nextId, title, done: false };
-  tasks.push(newTask);
-  return newTask;
+  const insert = db.prepare('INSERT INTO tasks (title, done) VALUES (?, ?)');
+  const result = insert.run(title, 0);
+  const newId = result.lastInsertRowid as number;
+  return { id: newId, title, done: false };
 };
 
 export const updateTask = (
   id: number,
   updates: Partial<Pick<Task, 'title' | 'done'>>
 ): Task | undefined => {
-  const task = getTaskById(id);
-  if (!task) return undefined;
+  const existing = getTaskById(id);
+  if (!existing) return undefined;
 
-  if (updates.title !== undefined) task.title = updates.title;
-  if (updates.done !== undefined) task.done = updates.done;
+  const newTitle = updates.title !== undefined ? updates.title : existing.title;
+  const newDone = updates.done !== undefined ? updates.done : existing.done;
 
-  return task;
+  db.prepare('UPDATE tasks SET title = ?, done = ? WHERE id = ?').run(
+    newTitle,
+    newDone ? 1 : 0,
+    id
+  );
+
+  return { id, title: newTitle, done: newDone };
 };
 
 export const deleteTask = (id: number): boolean => {
-  const index = tasks.findIndex((t) => t.id === id);
-  if (index === -1) return false;
-
-  tasks.splice(index, 1);
-  return true;
+  const result = db.prepare('DELETE FROM tasks WHERE id = ?').run(id);
+  return result.changes > 0;
 };
