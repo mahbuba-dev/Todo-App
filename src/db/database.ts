@@ -1,6 +1,6 @@
-import Database from 'better-sqlite3'
+import { DatabaseSync } from 'node:sqlite';
 
-const db = new Database('taskes.db')
+const db = new DatabaseSync('tasks.db');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS tasks (
@@ -10,8 +10,7 @@ db.exec(`
   )
 `);
 
-const row = db.prepare('SELECT COUNT(*) as count from tasks').get() as {count: number };
-
+const row = db.prepare('SELECT COUNT(*) as count FROM tasks').get() as unknown as { count: number };
 
 if (row.count === 0) {
   const insert = db.prepare('INSERT INTO tasks (title, done) VALUES (?, ?)');
@@ -20,4 +19,4 @@ if (row.count === 0) {
   insert.run('Read chapter 3', 1);
 }
 
-export default db
+export default db;

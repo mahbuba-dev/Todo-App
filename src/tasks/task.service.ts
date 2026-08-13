@@ -14,12 +14,12 @@ const toTask = (row: TaskRow): Task => ({
 });
 
 export const getAllTasks = (): Task[] => {
-  const rows = db.prepare('SELECT * FROM tasks').all() as TaskRow[];
+  const rows = db.prepare('SELECT * FROM tasks').all() as unknown as TaskRow[];
   return rows.map(toTask);
 };
 
 export const getTaskById = (id: number): Task | undefined => {
-  const row = db.prepare('SELECT * FROM tasks WHERE id = ?').get(id) as TaskRow | undefined;
+  const row = db.prepare('SELECT * FROM tasks WHERE id = ?').get(id) as unknown as TaskRow | undefined;
   return row ? toTask(row) : undefined;
 };
 
