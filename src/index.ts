@@ -4,7 +4,7 @@ import taskRoutes from '../src/tasks/task.router';
 import cors from "cors";
 import swaggerUi from 'swagger-ui-express';
 import openapiSpec from '../src/openapi.json';
-
+import { pool } from './db/postgres';
 
 const app = express()
 app.use(express.json())
@@ -23,6 +23,9 @@ app.get('/health', (req: Request, res: Response) => {
     message: "Server is healthy"
   });
 });
+
+
+
 
 app.use('/tasks', taskRoutes );
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
