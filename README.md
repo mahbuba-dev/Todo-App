@@ -11,6 +11,37 @@ npm run dev
 
 Server runs on `http://localhost:3000`
 
+## Database (SQLite)
+
+This project uses SQLite for persistent storage, via Node.js's built-in `node:sqlite` module (available in Node.js v22+). No external native dependencies or compilation tools are required — the database works out of the box.
+
+**Why SQLite:** it's a lightweight, file-based database with no separate server to install or manage — ideal for a small project like this, while still teaching real SQL and persistence concepts.
+
+**Database file location:** `tasks.db`, created automatically in the project root the first time the server runs. It's gitignored, so a fresh clone will generate its own database with the 3 example tasks pre-seeded.
+
+## How to run
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+Server runs on `http://localhost:3000`. The SQLite database (`tasks.db`) and `tasks` table are created automatically on first run.
+
+
+
+## Example SQL query
+
+\`\`\`sql
+SELECT * FROM tasks WHERE done = 1;
+\`\`\`
+
+This returns only the completed tasks — verified that updating data directly in the database (e.g. `UPDATE tasks SET done = 1;`) is immediately reflected by the API without any code changes, since the API and the database share the same underlying data.
+
+## Persistence proof
+
+Created a task via `POST /tasks`, restarted the server, then called `GET /tasks` again — the task was still present. Unlike Assignment 1 (in-memory storage), data now survives restarts.
+
 ## Endpoints
 
 | Method | Path | Description |
