@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
-import * as taskService from '../tasks/task.service'
-;
+import * as taskService from '../tasks/task.service';
 
-export const getAllTasks = (req: Request, res: Response) => {
-  res.json(taskService.getAllTasks());
+export const getAllTasks = async (req: Request, res: Response) => {
+  const tasks = await taskService.getAllTasks();
+  res.json(tasks);
 };
 
-export const getTaskById = (req: Request, res: Response) => {
+export const getTaskById = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const task = taskService.getTaskById(id);
+  const task = await taskService.getTaskById(id);
 
   if (!task) {
     return res.status(404).json({ error: `Task ${id} not found` });
@@ -17,18 +17,18 @@ export const getTaskById = (req: Request, res: Response) => {
   res.json(task);
 };
 
-export const createTask = (req: Request, res: Response) => {
+export const createTask = async (req: Request, res: Response) => {
   const { title } = req.body;
 
   if (!title || typeof title !== 'string' || title.trim() === '') {
     return res.status(400).json({ error: 'title is required and must be a non-empty string' });
   }
 
-  const newTask = taskService.createTask(title);
+  const newTask = await taskService.createTask(title);
   res.status(201).json(newTask);
 };
 
-export const updateTask = (req: Request, res: Response) => {
+export const updateTask = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const { title, done } = req.body;
 
@@ -39,7 +39,7 @@ export const updateTask = (req: Request, res: Response) => {
     return res.status(400).json({ error: 'done must be a boolean' });
   }
 
-  const updated = taskService.updateTask(id, { title, done });
+  const updated = await taskService.updateTask(id, { title, done });
 
   if (!updated) {
     return res.status(404).json({ error: `Task ${id} not found` });
@@ -48,9 +48,9 @@ export const updateTask = (req: Request, res: Response) => {
   res.json(updated);
 };
 
-export const deleteTask = (req: Request, res: Response) => {
+export const deleteTask = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const success = taskService.deleteTask(id);
+  const success = await taskService.deleteTask(id);
 
   if (!success) {
     return res.status(404).json({ error: `Task ${id} not found` });
@@ -58,4 +58,3 @@ export const deleteTask = (req: Request, res: Response) => {
 
   res.status(204).send();
 };
-

@@ -4,7 +4,14 @@ import taskRoutes from '../src/tasks/task.router';
 import cors from "cors";
 import swaggerUi from 'swagger-ui-express';
 import openapiSpec from '../src/openapi.json';
-import { pool } from './db/postgres';
+import { initDb } from './db/postgres';
+
+const startServer = async () => {
+  await initDb();
+  app.listen(3000, () => console.log('Server running on port 3000'));
+};
+
+startServer();
 
 const app = express()
 app.use(express.json())
