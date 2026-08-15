@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: todo_db
+    volumes:
+      - todo-postgres-data:/var/lib/postgresql
+    ports:
+      - "5555:5432"
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/todo_db
+    depends_on:
+      - postgres
+
+volumes:
+  todo-postgres-data:
