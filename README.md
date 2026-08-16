@@ -68,6 +68,7 @@ Content-Length: 138
 Visit `http://localhost:3000/docs` for interactive API documentation.
 
 ![Swagger UI screenshot](screenshots/swagger-ui.png)
+![Swagger UI screenshot](screenshots/swagger-ui-1.png)
 
 ## Architecture — repository pattern
 
